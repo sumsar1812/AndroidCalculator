@@ -5,30 +5,28 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import sumsar1812.github.io.calculator.models.Calculation;
-import sumsar1812.github.io.calculator.models.History;
 
 public class MainActivity extends AppCompatActivity implements Presenter.View{
     private List<Button> buttons = new ArrayList<>();
+
     private Presenter presenter;
     private RecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
+    private TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
 
-        presenter = new Presenter(this);
+        presenter = new Presenter(this,this);
         for (int i = 1; i <= 20;i++) {
             int id = getResources().getIdentifier("button" + i,"id", getPackageName());
             Button b = findViewById(id);
@@ -43,39 +41,46 @@ public class MainActivity extends AppCompatActivity implements Presenter.View{
     }
     public void initViews() {
         initRecyclerView();
+        textView = findViewById(R.id.textView);
+
     }
-    @Override
-    public void addToScrollView(Calculation calc) {
+    public void addToListView(Calculation calc) {
         if (calc.toString().isEmpty())
             return;
         adapter.getCalc().add(calc);
         addAdapter();
     }
-
+    public void addResult(double result) {
+        textView.setText("" + result);
+    }
     @Override
     public void addToCurrentItem(Calculation calc) {
-        if (calc.toString().isEmpty())
+        if (adapter.getCalc().size() == 0 || !adapter.getCalc().contains(calc)) {
+            addToListView(calc);
             return;
-        if (adapter.getCalc().size() == 0)
-            addToScrollView(calc);
+        }
         adapter.getCalc().set(adapter.getItemCount() - 1, calc);
         addAdapter();
     }
-    private void initRecyclerView() {
-
-        ArrayList<Calculation> temp = new ArrayList<>();
-        temp.add(new Calculation(new History()));
-        temp.add(new Calculation(new History()));
-        temp.get(0).addToNumber("55");
-        temp.get(1).addToNumber("54");
-        adapter = new RecyclerViewAdapter(this, temp);
+    @Override
+    public void clearAll() {
+        adapter.getCalc().clear();
         addAdapter();
     }
+    private void initRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerView);
+        adapter = new RecyclerViewAdapter(this, new ArrayList<Calculation>());
+        addAdapter();
+        RecyclerViewMargin decoration = new RecyclerViewMargin(10);
+        recyclerView.addItemDecoration(decoration);
+    }
     private void addAdapter() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        int pos = RecyclerViewAdapter.getPosition();
-        recyclerView.scrollTo(0,pos);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (adapter != null && adapter.getItemCount() > 0) {
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        }
+
     }
+
 }

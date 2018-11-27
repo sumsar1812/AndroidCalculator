@@ -14,4 +14,7 @@ public class History {
     public void addCalculation(Calculation calculation) {
         history.add(calculation);
     }
+    public void clear() {
+        history.clear();
+    }
 }

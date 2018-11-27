@@ -6,6 +6,7 @@ public enum Operation {
     DIVIDE,
     MULTIPLY,
     CLEAR,
+    CLEARALL,
     EQUALS;
     public static Operation getOperation(String val) {
         switch (val) {
@@ -21,6 +22,8 @@ public enum Operation {
                 return CLEAR;
             case "=":
                 return EQUALS;
+            case "AC":
+                return CLEARALL;
             default:
                 return null;
         }
@@ -40,6 +43,8 @@ public enum Operation {
                 return "C";
             case EQUALS:
                 return "=";
+            case CLEARALL:
+                return "AC";
             default:
                 return null;
         }
