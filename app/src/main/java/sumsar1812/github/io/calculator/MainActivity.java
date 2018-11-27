@@ -1,5 +1,7 @@
 package sumsar1812.github.io.calculator;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,19 +28,21 @@ public class MainActivity extends AppCompatActivity implements Presenter.View{
         setContentView(R.layout.activity_main);
         initViews();
 
-        presenter = new Presenter(this,this);
-        for (int i = 1; i <= 20;i++) {
-            int id = getResources().getIdentifier("button" + i,"id", getPackageName());
+        presenter = new Presenter(this, this);
+        for (int i = 1; i <= 20; i++) {
+            int id = getResources().getIdentifier("button" + i, "id", getPackageName());
             Button b = findViewById(id);
             buttons.add(b);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    presenter.doCalculation(((Button)v).getText().toString());
+                    presenter.doCalculation(((Button) v).getText().toString());
                 }
             });
         }
     }
+
+
     public void initViews() {
         initRecyclerView();
         textView = findViewById(R.id.textView);

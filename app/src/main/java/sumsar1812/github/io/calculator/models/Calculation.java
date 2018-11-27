@@ -1,5 +1,6 @@
 package sumsar1812.github.io.calculator.models;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class Calculation {
@@ -103,8 +104,8 @@ public class Calculation {
 
         }
 
-        Double first = Double.valueOf(currentFirst);
-        Double second;
+        double first = Double.valueOf(currentFirst);
+        double second;
         if (currentSecond.contains("%")) {
             second = doPercent(first, currentSecond);
         } else if (currentSecond.isEmpty()) {
@@ -112,6 +113,7 @@ public class Calculation {
         } else {
             second = Double.valueOf(currentSecond);
         }
+
         switch(currentOperation) {
             case PLUS:
                 result = first + second;
@@ -123,6 +125,7 @@ public class Calculation {
                 if (second == 0)
                     throw new ArithmeticException();
                 result = first / second;
+
                 break;
             case MULTIPLY:
                 result = first * second;
@@ -169,7 +172,8 @@ public class Calculation {
         if (result == null) {
             return currentFirst + " " + currentOperation.toString() + " " + currentSecond;
         } else {
-            return currentFirst + " " + currentOperation.toString() + " " + currentSecond + " = " + result;
+            DecimalFormat df = new DecimalFormat("#.###");
+            return currentFirst + " " + currentOperation.toString() + " " + currentSecond + " = " + df.format(result);
         }
     }
 }
